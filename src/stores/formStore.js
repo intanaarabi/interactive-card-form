@@ -1,21 +1,8 @@
-// store.js
 import create from 'zustand';
 
-const useFormDetailsStore = create((set) => ({
-  formDetails: {
-    name: '',
-    cardNumber: '',
-    expiryMonth: '',
-    expiryYear: '',
-    cvc: '',
-  },
-  setFormDetails: (details) =>
-    set((state) => ({
-      formDetails: {
-        ...state.formDetails,
-        ...details,
-      },
-    })),
+const useStore = create((set) => ({
+  formData: {},
+  setFormData: (data) => set({ formData: data }),
 }));
 
-export default useFormDetailsStore;
+export default useStore;
