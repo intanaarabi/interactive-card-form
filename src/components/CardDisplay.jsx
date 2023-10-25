@@ -1,7 +1,7 @@
 function CardFront() {
     return (
         <>
-            <div className="relative ml-[-70px]">
+            <div className="relative ml-[-100px]">
                 <img 
                     src="./images/bg-card-front.png"
                     alt="Description of Image" 
@@ -44,7 +44,7 @@ function CardBack() {
 
 function CardDisplay() {
     return (
-        <div className="absolute flex flex-col justify-center gap-10 h-full text-white left-[200px]">
+        <div className="absolute flex flex-col justify-center gap-10 h-full text-white left-[300px]">
             <CardFront/>
             <CardBack/> 
         </div>

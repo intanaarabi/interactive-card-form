@@ -9,7 +9,7 @@ function App() {
       <div className='flex flex-row'>
         <div className='min-h-screen w-[500px] bg-cover bg-main-desktop relative'>
         </div>
-        <div className='bg-white '>
+        <div className='bg-white flex flex-col justify-center items-center flex-grow'>
           <CardForm/>
         </div>
         <CardDisplay/>
