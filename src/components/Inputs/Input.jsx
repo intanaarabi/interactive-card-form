@@ -2,19 +2,19 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 
-const Input = React.forwardRef(({ label, placeholder, type, name, errors }, ref) => {
+const Input = React.forwardRef(({ label, placeholder, type, name, errors, ...props }, ref) => {
     const error = errors[name];
-    console.log(errors)
 
     return (
     <div className="flex flex-col">
       {label && <label  className="uppercase font-medium text-sm tracking-wide mb-2">{label}</label>}
-      <input   className={`border rounded p-2 ${error ? 'border-red-500' : ''}`} 
+      <input className={`border rounded p-2 ${error ? 'border-red-500' : ''}`} 
        autoComplete="cc-csc" 
        type={type} 
        placeholder={placeholder} 
        ref={ref}
        name={name}
+       {...props}
       />
     </div>
   );

@@ -22,7 +22,7 @@ const ExpiryInput = React.forwardRef(({ errors }, ref) => {
           }}
         />
         <input 
-          type="text" 
+          type="number" 
           name="yyalias"  
           placeholder="YY"
           maxLength="2" 

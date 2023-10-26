@@ -1,4 +1,11 @@
+import useStore from "../stores/formStore";
+
+function isEmpty(obj) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
 function CardFront() {
+    const formData = useStore((state) => state.formData); 
     return (
         <>
             <div className="relative ml-[-100px]">
@@ -10,10 +17,10 @@ function CardFront() {
                 <div className="absolute top-8 left-10">
                     <img className="w-12 2xl:w-20 pb-10 2xl:pb-16" src="./images/card-logo.svg" alt="card-front"></img>
                     <div className="flex flex-col gap-4">
-                        <div className="text-xl 2xl:text-3xl tracking-widest pr-10">9592 1923 1212 1111</div>
+                        <div className="text-xl 2xl:text-3xl tracking-widest pr-10">{formData.ccalias ? formData.ccalias : "0000 0000 0000 0000"}</div>
                         <div className="flex flex-row justify-between text-sm tracking-widest">
-                            <div className="uppercase ">Felicia Lane</div>
-                            <div className="">09/09</div>
+                            <div className="uppercase ">{formData.name ? formData.name : "Jane Appleseed"}</div>
+                            <div className="">{formData.mmalias ? formData.mmalias : "00"}<span>/</span>{formData.yyalias ? formData.yyalias : "00"} </div>
                         </div>
                     </div>
                 </div>
