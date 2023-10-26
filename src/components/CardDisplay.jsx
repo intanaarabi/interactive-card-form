@@ -24,6 +24,8 @@ function CardFront() {
 }
 
 function CardBack() {
+    const formData = useStore((state) => state.formData); 
+
     return (
         <>
         <div className="relative">
@@ -34,7 +36,7 @@ function CardBack() {
             />
 
             <div className="absolute top-[82px] 2xl:top-[105px] right-[60px]">
-                <div className="text-md 2xl:text-xl tracking-widest">000</div>
+                <div className="text-md 2xl:text-xl tracking-widest">{formData.cvc ? formData.cvc : "000"}</div>
             </div>
         </div>
         

@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import useStore from "../stores/formStore";
-import ExpiryInput from "./Inputs/ExpiryInput";
 import { useForm } from 'react-hook-form';
 
 function CardForm() {
@@ -95,7 +94,42 @@ function CardForm() {
             {errors.ccalias && <span  className="text-xs text-red-500">{errors.ccalias.message}</span>}
         </div>
         <div className="flex flex-row gap-4">
-        <ExpiryInput {...register('mmalias',{ required: "Can't be blank." })} {...register('yyalias',{ required: "Can't be blank." })} errors={errors} />
+        <div className="flex flex-col">
+          <label htmlFor="month" className="uppercase font-medium text-sm tracking-wide mb-2">Expiry Date (MM/YY)</label>
+          <div className="flex gap-2">
+            <div className="flex flex-col">
+              <input 
+                type="text" 
+                id="month" 
+                name="mmalias" 
+                placeholder="MM"
+                maxLength="2" 
+                className={`border rounded w-20 p-2 ${errors["mmalias"] ? 'border-red-500' : ''}`} 
+                autoComplete="cc-csc"
+                {...register('mmalias',{
+                  required: 'This is required.',
+                })}
+                
+              />
+              {errors.mmalias && <span className="text-xs text-red-500">{errors.mmalias.message}</span>}
+            </div>
+            <div className="flex flex-col">
+            <input 
+              type="number" 
+              name="yyalias"  
+              placeholder="YY"
+              maxLength="2" 
+              className={`border rounded w-20 p-2 ${errors["yyalias"] ? 'border-red-500' : ''}`} 
+              autoComplete="cc-csc"
+              {...register('yyalias',{
+                required: 'This is required.',
+              })}
+            />
+            {errors.yyalias && <span className="text-xs text-red-500">{errors.yyalias.message}</span>}
+            </div>
+
+          </div>
+        </div>
         <div className="flex flex-col">
             <label className="uppercase font-medium text-sm tracking-wide mb-2">cvc</label>
             <input
