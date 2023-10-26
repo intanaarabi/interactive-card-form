@@ -1,9 +1,5 @@
 import useStore from "../stores/formStore";
 
-function isEmpty(obj) {
-    return Object.keys(obj).length === 0 && obj.constructor === Object;
-}
-
 function CardFront() {
     const formData = useStore((state) => state.formData); 
     return (
@@ -14,14 +10,12 @@ function CardFront() {
                     alt="Description of Image" 
                     className="w-[350px] 2xl:w-[450px]"
                 />
-                <div className="absolute top-8 left-10">
+                <div className="absolute top-[30px] left-[30px] w-[280px] 2xl:w-[380px]">
                     <img className="w-12 2xl:w-20 pb-10 2xl:pb-16" src="./images/card-logo.svg" alt="card-front"></img>
-                    <div className="flex flex-col gap-4">
-                        <div className="text-xl 2xl:text-3xl tracking-widest pr-10">{formData.ccalias ? formData.ccalias : "0000 0000 0000 0000"}</div>
-                        <div className="flex flex-row justify-between text-sm tracking-widest">
-                            <div className="uppercase ">{formData.name ? formData.name : "Jane Appleseed"}</div>
-                            <div className="">{formData.mmalias ? formData.mmalias : "00"}<span>/</span>{formData.yyalias ? formData.yyalias : "00"} </div>
-                        </div>
+                    <div className="text-xl 2xl:text-[28px] tracking-widest">{formData.ccalias ? formData.ccalias : "0000 0000 0000 0000"}</div>
+                    <div className="flex flex-row py-5">
+                        <div className="uppercase w-4/5">{formData.name ? formData.name : "Jane Appleseed"}</div>
+                        <div className="text-end w-1/5">{formData.mmalias ? formData.mmalias : "00"}<span>/</span>{formData.yyalias ? formData.yyalias : "00"} </div>
                     </div>
                 </div>
             </div> 
