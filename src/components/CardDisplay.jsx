@@ -8,7 +8,7 @@ function CardFront() {
                 <img 
                     src="./images/bg-card-front.png"
                     alt="Description of Image" 
-                    className="w-[350px] 2xl:w-[450px]"
+                    className="w-[350px] 2xl:w-[450px] shadow-2xl"
                 />
                 <div className="absolute top-[30px] left-[30px] w-[280px] 2xl:w-[380px]">
                     <img className="w-12 2xl:w-20 pb-10 2xl:pb-16" src="./images/card-logo.svg" alt="card-front"></img>
@@ -32,7 +32,7 @@ function CardBack() {
         <img 
                 src="./images/bg-card-back.png"
                 alt="Description of Image" 
-                className="w-[350px] 2xl:w-[450px]"
+                className="w-[350px] 2xl:w-[450px] shadow-xl"
             />
 
             <div className="absolute top-[82px] 2xl:top-[105px] right-[60px]">
