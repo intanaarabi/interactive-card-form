@@ -11,6 +11,7 @@ function CardForm() {
     setValue,
     setError,
     clearErrors,
+    getValues,
     formState: { errors },
   } = useForm();
 
@@ -19,28 +20,18 @@ function CardForm() {
 
   const watchedFormValues = watch(); // This will watch for changes in form values
   const cc_num = watch('ccalias');
-  const cvc_num = watch('cvc')
 
-  //Form validation for card number 
+  //Reformating credit card number
   useEffect(() => {
     if (cc_num) {
         // Step 1: Remove all non-numeric characters
         let cleanedValue = cc_num.replace(/\D/g, '');
-
         // Check for non-numeric characters
         if (cleanedValue.length !== cc_num.replace(/\s+/g, '').length) {
-            setError('ccalias', {
-                type: 'manual',
-                message: 'Wrong format, numbers only.'
-            });
             return;
-        } else {
-          clearErrors()
-        }
-
+        } 
         // Step 2: Insert spaces after every 4 digits
         let formattedValue = cleanedValue.replace(/(\d{4})(?=\d)/g, '$1 ');
-
         // Step 3: Use the formatted string if it's different from the original
         if (formattedValue !== cc_num) {
             setValue('ccalias', formattedValue);
@@ -48,60 +39,37 @@ function CardForm() {
     }
 }, [cc_num, setValue, setError, clearErrors]);
 
-  //Form validation for cvc number
-  useEffect(() => {
-    // Check if the value is not numeric or exceeds three characters
-    if (!/^[0-9]*$/.test(cvc_num)) {
-        setError('cvc', {
-            type: 'manual',
-            message: 'Wrong format, numbers only.'
-          });
-    } else {
-        clearErrors('cvc');
+//Form validation for credit card number
+  const validateCCAlias = (value) => {
+    const onlyNums = value.replace(/ /g, '');
+    if (/[^0-9]/.test(onlyNums)) {
+        return 'Wrong format, numbers only.';
     }
-}, [cvc_num, setError, clearErrors]);
 
-  //Form validation for mm/yy expiration
-    const mmValue = watch('mmalias');
-    const yyValue = watch('yyalias');
+    if (onlyNums.length !== 16) {
+        return 'The card number should be exactly 16 digits.';
+    }
+
+    return true;
+  };
+
+//Form validation for mm/yy expiration
+  const validateExpiryDate = () => {
     const currentYear = new Date().getFullYear();
     const lastTwoDigitsCurrentYear = currentYear % 100;
 
-    useEffect(() => {
+    const mmValue = getValues('mmalias');
+    const yyValue = getValues('yyalias');
 
-      if (mmValue?.length === 2 && !/^(0[1-9]|1[0-2])$/.test(mmValue)) {
-          setError('mmalias', {
-              type: 'manual',
-              message: 'Please enter a valid month.'
-          });
-      } else {
-          clearErrors('mmalias');
-      }
-  
-      const enteredYear = parseInt(yyValue, 10);
-
-      if (yyValue?.length === 2) {
-        if (!/^[0-9]{2}$/.test(yyValue)) {
-          setError('yyalias', {
-              type: 'manual',
-              message: 'Please enter a valid year.'
-          });
-      } else if (isNaN(enteredYear) || enteredYear < lastTwoDigitsCurrentYear || (enteredYear === lastTwoDigitsCurrentYear && parseInt(mmValue, 10) < new Date().getMonth() + 1)) {
-          setError('yyalias', {
-              type: 'manual',
-              message: 'Expiration is in the past.'
-          });
-      } else if (enteredYear > lastTwoDigitsCurrentYear + 20) { // Assuming 20 years is our max
-          setError('yyalias', {
-              type: 'manual',
-              message: 'Too far in the future.'
-          });
-      } else {
-          clearErrors('yyalias');
-      }
+    const enteredYear = parseInt(yyValue, 10);
+    if (isNaN(enteredYear) || enteredYear < lastTwoDigitsCurrentYear || (enteredYear === lastTwoDigitsCurrentYear && parseInt(mmValue, 10) < new Date().getMonth() + 1)) {
+        return 'Expiration is in the past.';
+    } else if (enteredYear > lastTwoDigitsCurrentYear + 20) { // Assuming 20 years is our max
+        return 'Too far in the future.';
     }
-  }, [mmValue, yyValue, setError, clearErrors, lastTwoDigitsCurrentYear]);
-  
+      return true;
+  }
+
 
   useEffect(() => {
     setFormData(watchedFormValues); 
@@ -109,10 +77,9 @@ function CardForm() {
 
   const onSubmit = () => {
     reset();
-    resetFormData()
+    resetFormData();
   };
-
-
+ 
   return (
       <form  className="flex flex-col gap-6 w-[400px]" onSubmit={handleSubmit(onSubmit)}>
          <div className="flex flex-col">
@@ -125,7 +92,7 @@ function CardForm() {
               maxLength="21"
               placeholder="e.g Jane Appleseed"
               {...register('name',{
-                required: 'This is required.',
+                required: "Can't be blank",
               })}
             />
             {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
@@ -141,7 +108,8 @@ function CardForm() {
               maxLength="19"
               placeholder="e.g 1234 5678 9000 1234"
               {...register('ccalias',{
-                required: 'This is required.',
+                required: "Can't be blank",
+                validate: validateCCAlias
               })}
             />
             {errors.ccalias && <span  className="text-xs text-red-500">{errors.ccalias.message}</span>}
@@ -160,7 +128,11 @@ function CardForm() {
                 className={`border rounded w-20 p-2 ${errors["mmalias"] ? 'border-red-500' : ''}`} 
                 autoComplete="cc-csc"
                 {...register('mmalias',{
-                  required: 'This is required.',
+                  required: "Can't be blank",
+                  pattern: {
+                    value: /^(0[1-9]|1[0-2])$/,
+                    message: 'MM should be between 01-12.'
+                  }
                 })}
                 
               />
@@ -176,7 +148,12 @@ function CardForm() {
               className={`border rounded w-20 p-2 ${errors["yyalias"] ? 'border-red-500' : ''}`} 
               autoComplete="cc-csc"
               {...register('yyalias',{
-                required: 'This is required.',
+                required: "Can't be blank",
+                pattern: {
+                  value: /^\d{2}$/,
+                  message: 'YY should be two numeric digits.'
+                },
+                validate: validateExpiryDate
               })}
             />
             {errors.yyalias && <span className="text-xs text-red-500">{errors.yyalias.message}</span>}
@@ -194,7 +171,11 @@ function CardForm() {
               maxLength="3"
               placeholder="e.g 123"
               {...register('cvc', {
-                required: 'This is required.'
+                required: "Can't be blank",
+                pattern: {
+                  value: /^\d{3}$/,
+                  message: 'CVC should be a 3-digit format.'
+              }
               })}
             />
             {errors.cvc && <span className="text-xs text-red-500">{errors.cvc.message}</span>}
