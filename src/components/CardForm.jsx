@@ -19,7 +19,9 @@ function CardForm() {
 
   const watchedFormValues = watch(); // This will watch for changes in form values
   const cc_num = watch('ccalias');
+  const cvc_num = watch('cvc')
 
+  //Form validation for card number 
   useEffect(() => {
     if (cc_num) {
         // Step 1: Remove all non-numeric characters
@@ -29,7 +31,7 @@ function CardForm() {
         if (cleanedValue.length !== cc_num.replace(/\s+/g, '').length) {
             setError('ccalias', {
                 type: 'manual',
-                message: 'Credit card number should only contain numeric characters.'
+                message: 'Wrong format, numbers only.'
             });
             return;
         } else {
@@ -44,7 +46,62 @@ function CardForm() {
             setValue('ccalias', formattedValue);
         }
     }
-}, [cc_num, setValue, setError]);
+}, [cc_num, setValue, setError, clearErrors]);
+
+  //Form validation for cvc number
+  useEffect(() => {
+    // Check if the value is not numeric or exceeds three characters
+    if (!/^[0-9]*$/.test(cvc_num)) {
+        setError('cvc', {
+            type: 'manual',
+            message: 'Wrong format, numbers only.'
+          });
+    } else {
+        clearErrors('cvc');
+    }
+}, [cvc_num, setError, clearErrors]);
+
+
+    const mmValue = watch('mmalias');
+    const yyValue = watch('yyalias');
+    const currentYear = new Date().getFullYear();
+    const lastTwoDigitsCurrentYear = currentYear % 100;
+
+    useEffect(() => {
+
+      if (mmValue?.length === 2 && !/^(0[1-9]|1[0-2])$/.test(mmValue)) {
+          setError('mmalias', {
+              type: 'manual',
+              message: 'Please enter a valid month.'
+          });
+      } else {
+          clearErrors('mmalias');
+      }
+  
+      const enteredYear = parseInt(yyValue, 10);
+
+      if (yyValue?.length === 2) {
+        if (!/^[0-9]{2}$/.test(yyValue)) {
+          setError('yyalias', {
+              type: 'manual',
+              message: 'Please enter a valid year.'
+          });
+      } else if (isNaN(enteredYear) || enteredYear < lastTwoDigitsCurrentYear || (enteredYear === lastTwoDigitsCurrentYear && parseInt(mmValue, 10) < new Date().getMonth() + 1)) {
+          setError('yyalias', {
+              type: 'manual',
+              message: 'Expiration is in the past.'
+          });
+      } else if (enteredYear > lastTwoDigitsCurrentYear + 20) { // Assuming 20 years is our max
+          setError('yyalias', {
+              type: 'manual',
+              message: 'Too far in the future.'
+          });
+      } else {
+          clearErrors('yyalias');
+      }
+    }
+  }, [mmValue, yyValue, setError, clearErrors]);
+  
 
   useEffect(() => {
     setFormData(watchedFormValues); 
@@ -85,10 +142,6 @@ function CardForm() {
               placeholder="e.g 1234 5678 9000 1234"
               {...register('ccalias',{
                 required: 'This is required.',
-                pattern: {
-                  value: /^(\d{4} ){3}\d{4}$/,
-                  message: 'Invalid card number.'
-                }
               })}
             />
             {errors.ccalias && <span  className="text-xs text-red-500">{errors.ccalias.message}</span>}
@@ -100,7 +153,7 @@ function CardForm() {
             <div className="flex flex-col">
               <input 
                 type="text" 
-                id="month" 
+                id="mmalias" 
                 name="mmalias" 
                 placeholder="MM"
                 maxLength="2" 
@@ -115,7 +168,8 @@ function CardForm() {
             </div>
             <div className="flex flex-col">
             <input 
-              type="number" 
+              id="yyalias" 
+              type="text" 
               name="yyalias"  
               placeholder="YY"
               maxLength="2" 
@@ -139,8 +193,8 @@ function CardForm() {
               type="text"
               maxLength="3"
               placeholder="e.g 123"
-              {...register('cvc',{
-                required: 'This is required.',
+              {...register('cvc', {
+                required: 'This is required.'
               })}
             />
             {errors.cvc && <span className="text-xs text-red-500">{errors.cvc.message}</span>}
