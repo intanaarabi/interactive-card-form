@@ -61,7 +61,7 @@ function CardForm() {
     }
 }, [cvc_num, setError, clearErrors]);
 
-
+  //Form validation for mm/yy expiration
     const mmValue = watch('mmalias');
     const yyValue = watch('yyalias');
     const currentYear = new Date().getFullYear();
@@ -100,7 +100,7 @@ function CardForm() {
           clearErrors('yyalias');
       }
     }
-  }, [mmValue, yyValue, setError, clearErrors]);
+  }, [mmValue, yyValue, setError, clearErrors, lastTwoDigitsCurrentYear]);
   
 
   useEffect(() => {
