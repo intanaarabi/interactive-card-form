@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useStore from "../stores/formStore";
 import { useForm } from 'react-hook-form';
+import CardConfirmation from "./CardConfirmation";
 
 function CardForm() {
   const {
@@ -17,6 +18,7 @@ function CardForm() {
 
   const setFormData = useStore((state) => state.setFormData);
   const resetFormData = useStore((state) => state.resetFormData);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const watchedFormValues = watch(); // This will watch for changes in form values
   const cc_num = watch('ccalias');
@@ -75,117 +77,138 @@ function CardForm() {
     setFormData(watchedFormValues); 
   }, [watchedFormValues, setFormData]);  
 
+  useEffect(() => {
+    if (!showSuccess) {
+      reset();
+      resetFormData();
+    }
+  }, [showSuccess,reset,resetFormData])
+
   const onSubmit = () => {
-    reset();
-    resetFormData();
+    setShowSuccess(true);
   };
- 
-  return (
-      <form  className="flex flex-col gap-6 w-[400px]" onSubmit={handleSubmit(onSubmit)}>
-         <div className="flex flex-col">
-            <label className="uppercase font-medium text-sm tracking-wide mb-2">Name</label>
-            <input
-              name="name"
-              className={`border rounded p-2 ${ errors["name"] ? 'border-red-500' : ''}`} 
-              autoComplete="cc-csc" 
-              type="text"
-              maxLength="21"
-              placeholder="e.g Jane Appleseed"
-              {...register('name',{
-                required: "Can't be blank",
-              })}
-            />
-            {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
 
-        </div>
-        <div className="flex flex-col">
-            <label className="uppercase font-medium text-sm tracking-wide mb-2">Card Number</label>
-            <input
-              name="ccalias"
-              className={`border rounded p-2 ${ errors["ccalias"] ? 'border-red-500' : ''}`} 
-              autoComplete="cc-csc" 
-              type="text"
-              maxLength="19"
-              placeholder="e.g 1234 5678 9000 1234"
-              {...register('ccalias',{
-                required: "Can't be blank",
-                validate: validateCCAlias
-              })}
-            />
-            {errors.ccalias && <span  className="text-xs text-red-500">{errors.ccalias.message}</span>}
-        </div>
-        <div className="flex flex-row gap-4">
-        <div className="flex flex-col">
-          <label htmlFor="month" className="uppercase font-medium text-sm tracking-wide mb-2">Expiry Date (MM/YY)</label>
-          <div className="flex gap-2">
-            <div className="flex flex-col">
-              <input 
-                type="text" 
-                id="mmalias" 
-                name="mmalias" 
-                placeholder="MM"
-                maxLength="2" 
-                className={`border rounded w-20 p-2 ${errors["mmalias"] ? 'border-red-500' : ''}`} 
-                autoComplete="cc-csc"
-                {...register('mmalias',{
-                  required: "Can't be blank",
-                  pattern: {
-                    value: /^(0[1-9]|1[0-2])$/,
-                    message: 'MM should be between 01-12.'
-                  }
-                })}
-                
-              />
-              {errors.mmalias && <span className="text-xs text-red-500">{errors.mmalias.message}</span>}
-            </div>
-            <div className="flex flex-col">
-            <input 
-              id="yyalias" 
-              type="text" 
-              name="yyalias"  
-              placeholder="YY"
-              maxLength="2" 
-              className={`border rounded w-20 p-2 ${errors["yyalias"] ? 'border-red-500' : ''}`} 
-              autoComplete="cc-csc"
-              {...register('yyalias',{
-                required: "Can't be blank",
-                pattern: {
-                  value: /^\d{2}$/,
-                  message: 'YY should be two numeric digits.'
-                },
-                validate: validateExpiryDate
-              })}
-            />
-            {errors.yyalias && <span className="text-xs text-red-500">{errors.yyalias.message}</span>}
-            </div>
-
-          </div>
-        </div>
-        <div className="flex flex-col">
-            <label className="uppercase font-medium text-sm tracking-wide mb-2">cvc</label>
-            <input
-              name="cvc"
-              className={`border rounded p-2 ${ errors["cvc"] ? 'border-red-500' : ''}`} 
-              autoComplete="cc-csc" 
-              type="text"
-              maxLength="3"
-              placeholder="e.g 123"
-              {...register('cvc', {
-                required: "Can't be blank",
-                pattern: {
-                  value: /^\d{3}$/,
-                  message: 'CVC should be a 3-digit format.'
-              }
-              })}
-            />
-            {errors.cvc && <span className="text-xs text-red-500">{errors.cvc.message}</span>}
-
-        </div>
-        </div>
-        
-        <button type="submit">Confirm</button>
-      </form>
-  );
+  //Styling
+  function getInputClassName(fieldName) {
+    let baseClasses = "placeholder-gray-300 transition-border duration-200 border rounded-lg px-3 py-2 font-semibold text-dark-violet focus:outline-none focus:border-focus focus:ring-1 focus:ring-focus ";
+    let errorClass = errors[fieldName] ? "border-error" : "";
+    return `${baseClasses} ${errorClass}`;
 }
 
-export default CardForm;
+const getLabelClassName = "uppercase font-bold text-xs tracking-wide mb-2 text-dark-violet"
+const getErrorClassName = "text-xs text-red-500 font-bold pt-2"
+ 
+  return (
+    <>
+    { showSuccess ? (
+      <div className=""><CardConfirmation continueHandler={setShowSuccess}/></div>
+    ) : (
+      <form  className="flex flex-col gap-6 w-[400px]" onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex flex-col">
+         <label className={getLabelClassName}>Cardholder Name</label>
+         <input
+           name="name"
+           className={getInputClassName("name")} 
+           autoComplete="cc-csc" 
+           type="text"
+           maxLength="21"
+           placeholder="e.g Jane Appleseed"
+           {...register('name',{
+             required: "Can't be blank",
+           })}
+         />
+         {errors.name && <span className={getErrorClassName} >{errors.name.message}</span>}
+
+     </div>
+     <div className="flex flex-col">
+         <label  className={getLabelClassName}>Card Number</label>
+         <input
+           name="ccalias"
+           className={getInputClassName("ccalias")} 
+           autoComplete="cc-csc" 
+           type="text"
+           maxLength="19"
+           placeholder="e.g 1234 5678 9000 1234"
+           {...register('ccalias',{
+             required: "Can't be blank",
+             validate: validateCCAlias
+           })}
+         />
+         {errors.ccalias && <span  className={getErrorClassName}>{errors.ccalias.message}</span>}
+     </div>
+     <div className="flex flex-row gap-4">
+     <div className="flex flex-col">
+       <label htmlFor="month" className={getLabelClassName}>Exp. date (MM/YY)</label>
+       <div className="flex gap-2">
+         <div className="flex flex-col">
+           <input 
+             type="text" 
+             id="mmalias" 
+             name="mmalias" 
+             placeholder="MM"
+             maxLength="2" 
+             className={`${getInputClassName("mmalias")} w-20`} 
+             autoComplete="cc-csc"
+             {...register('mmalias',{
+               required: "Can't be blank",
+               pattern: {
+                 value: /^(0[1-9]|1[0-2])$/,
+                 message: 'MM should be between 01-12.'
+               }
+             })}
+             
+           />
+           {errors.mmalias && <span className={getErrorClassName}>{errors.mmalias.message}</span>}
+         </div>
+         <div className="flex flex-col">
+         <input 
+           id="yyalias" 
+           type="text" 
+           name="yyalias"  
+           placeholder="YY"
+           maxLength="2" 
+           className={`${getInputClassName("yyalias")} w-20`} 
+           autoComplete="cc-csc"
+           {...register('yyalias',{
+             required: "Can't be blank",
+             pattern: {
+               value: /^\d{2}$/,
+               message: 'YY should be two numeric digits.'
+             },
+             validate: validateExpiryDate
+           })}
+         />
+         {errors.yyalias && <span className={getErrorClassName}>{errors.yyalias.message}</span>}
+         </div>
+
+       </div>
+     </div>
+     <div className="flex flex-col">
+         <label  className={getLabelClassName}>cvc</label>
+         <input
+           name="cvc"
+           className={getInputClassName("cvc")} 
+           autoComplete="cc-csc" 
+           type="text"
+           maxLength="3"
+           placeholder="e.g 123"
+           {...register('cvc', {
+             required: "Can't be blank",
+             pattern: {
+               value: /^\d{3}$/,
+               message: 'CVC should be a 3-digit format.'
+           }
+           })}
+         />
+         {errors.cvc && <span className={getErrorClassName}>{errors.cvc.message}</span>}
+
+     </div>
+     </div>
+     
+     <button type="submit" className="transition-text duration-200 bg-dark-violet text-light-gray-violet font-semibold p-3 mt-3 rounded-md hover:text-white">Confirm</button>
+    </form>
+    )}
+    </>
+)}
+
+export default CardForm
