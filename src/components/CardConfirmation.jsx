@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 function CardConfirmation({ continueHandler }) {
     return (
-        <div  className="flex flex-col gap-6 w-[400px] justify-center items-center text-center">
+        <div  className="flex flex-col gap-6 w-[300px] my-12 justify-center items-center text-center">
             <img 
                     src="./images/icon-complete.svg"
                     alt="Icon Complete" 

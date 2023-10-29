@@ -103,7 +103,7 @@ const getErrorClassName = "text-xs text-red-500 font-bold pt-2"
     { showSuccess ? (
       <div className=""><CardConfirmation continueHandler={setShowSuccess}/></div>
     ) : (
-      <form  className="py-[40px] lg:top-0 lg:relative flex flex-col gap-6 mx-6 lg:w-[300px] xl:w-[350px] 2xl:w-[400px]" onSubmit={handleSubmit(onSubmit)}>
+      <form  className="pt-[45px] py-10 lg:top-0 lg:relative flex flex-col gap-6 mx-6 lg:w-[300px] xl:w-[350px] 2xl:w-[400px]" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col">
           <label className={getLabelClassName}>Cardholder Name</label>
           <input
