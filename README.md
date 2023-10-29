@@ -29,7 +29,7 @@ Users should be able to:
 
 ### Screenshot
 
-![Desktop screenshot - Initial State](public/desktop-initial.jpg)
+![Desktop screenshot - Initial State](public/desktop-initial.png)
 ![Desktop screenshot - Error State](public/desktop-error.jpg)
 ![Desktop screenshot - Confirmation State](public/desktop-confirmation.jpg)
 ![Mobile screenshot - Live State](public/mobile-live-update.jpg)
