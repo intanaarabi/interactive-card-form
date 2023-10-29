@@ -11,11 +11,11 @@ function CardFront() {
                     className="w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[450px] shadow-2xl"
                 />
                 <div className="absolute top-[12%] left-[7%] w-[250px] lg:w-[250px] xl:w-[280px] 2xl:w-[380px]">
-                    <img className="w-12 lg:w-8 xl:w-12 2xl:w-20 pb-10 2xl:pb-16" src="./images/card-logo.svg" alt="card-front"></img>
-                    <div className="text-md lg:text-[18px] xl:text-xl 2xl:text-[28px] tracking-widest">{formData.ccalias ? formData.ccalias : "0000 0000 0000 0000"}</div>
-                    <div className="flex flex-row py-2 lg:py-3 xl:py-4 2xl:py-5">
-                        <div className="uppercase text-sm lg:text-xs xl:text-md 2xl:text-lg w-4/5">{formData.name ? formData.name : "Jane Appleseed"}</div>
-                        <div className="text-end text-sm lg:text-xs xl:text-md  2xl:text-lg w-1/5">{formData.mmalias ? formData.mmalias : "00"}<span>/</span>{formData.yyalias ? formData.yyalias : "00"} </div>
+                    <img className="w-12 lg:w-8 xl:w-12 2xl:w-20 pb-10 lg:pb-12 xl:pb-14 2xl:pb-16" src="./images/card-logo.svg" alt="card-front"></img>
+                    <div className="text-lg lg:text-[18px] xl:text-xl 2xl:text-[28px] tracking-widest">{formData.ccalias ? formData.ccalias : "0000 0000 0000 0000"}</div>
+                    <div className="flex flex-row py-2 lg:py-3 xl:py-4 2xl:py-5 tracking-widest">
+                        <div className="uppercase text-xs lg:text-xs xl:text-md 2xl:text-lg w-4/5">{formData.name ? formData.name : "Jane Appleseed"}</div>
+                        <div className="text-end text-xs lg:text-xs xl:text-md  2xl:text-lg w-1/5">{formData.mmalias ? formData.mmalias : "00"}<span>/</span>{formData.yyalias ? formData.yyalias : "00"} </div>
                     </div>
                 </div>
             </div> 
