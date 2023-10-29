@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'main-desktop': "url('./images/bg-main-desktop.png')",
-        'main=mobile': "url('./images/bg-main-mobile.png')",
+        'main-desktop': "url('/images/bg-main-desktop.png')",
+        'main=mobile': "url('/images/bg-main-mobile.png')",
       },
       colors: {
         'focus':'#600594',
